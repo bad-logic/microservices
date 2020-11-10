@@ -1,0 +1,61 @@
+apiVersion: skaffold/v2beta6
+kind: Config
+deploy:
+    kubectl:
+      manifests:
+        - ./infra/k8s/*.yaml
+build:
+    local:
+        push: false
+    artifacts:
+        - image: badlog/auth
+          context: auth
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+                - src: 'src/**/*.ts'
+                  dest: .
+        - image: badlog/tickets
+          context: tickets
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+                - src: 'src/**/*.ts'
+                  dest: .
+        - image: badlog/orders
+          context: orders
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+                - src: 'src/**/*.ts'
+                  dest: .
+        - image: badlog/client
+          context: client
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+                - src: '**/*.js'
+                  dest: .
+        - image: badlog/expiration
+          context: expiration
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+                - src: '**/*.ts'
+                  dest: .
+
+
+# k create secret generic jwt-secret --from-literal=JWT_KEY=#$@#DFGDGddsj&657$#
+# HSTS BY PASS type thisisunsafe
+# PORT-FORWARDING so that we can access pods running inside kubernetes cluster from outside cluster
+# strictly for development use only
+# kubernetes port-forward <running-pod-name> <local_machine_port>:<port_used_by_pod>
+# connnecting to mongo pods inside kubernetes
+# first forward port to some local ports.
+# then in terminal mongo --port <port_number>
+# or kubectl exec -it mongo-running-pod-name mongo

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: tickets-depl 
+spec:
+    replicas: 1
+    selector: 
+        matchLabels:
+            app: tickets 
+    template:
+        metadata:
+            labels:
+                app: tickets 
+        spec:
+            containers: 
+                - name: tickets
+                  image: badlg/tickets 
+                  env:
+                    - name: SERVER_PORT
+                      value: "3000"
+                    - name: NATS_URL
+                      value: 'http:nats-clusterip-srv:4222'
+                    - name: NATS_CLUSTER_ID
+                      value: ticketing
+                    - name: NATS_CLIENT_ID
+                      valueFrom: 
+                        fieldRef:
+                            fieldPath: metadata.name # currently running pods name. every pods has a unique name
+                    - name: TICKETS_MONGO_URI
+                      value: 'mongodb://tickets-mongo-clusterip-srv:27017/tickets'
+                    - name: JWT_SECRET_KEY
+                      valueFrom: 
+                        secretKeyRef:
+                            name: jwt-secret 
+                            key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: tickets-clusterip-srv
+spec:
+    selector:
+        app: tickets
+    type: ClusterIP
+    ports:
+        - name: tickets 
+          protocol: TCP
+          port: 3000
+          targetPort: 3000
