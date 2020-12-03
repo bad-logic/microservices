@@ -14,7 +14,7 @@ export class OrderCancelledListener extends Listener<OrderCancelledEvent>{
         const existing_ticket = await TicketRepo.getTicketById(ticket.id);
         if(!existing_ticket) throw new Error('ticket doesnot exist');
         // unsetting the order id property to mark as the ticket as being unreserved/cancelled
-        const re = await TicketRepo.unreserveTicketById(ticket.id,{orderId:existing_ticket.orderId});
+        const re = await TicketRepo.unreserveTicketById(ticket.id);
         // since the ticket has been updated it also needs to be synced with ticket in the orders service
         // so publish/fire a ticket updated event
         const formattedResult = TicketRepo.mapDocToObj(re);

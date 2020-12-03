@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: payments-depl 
+spec:
+    replicas: 1
+    selector: 
+        matchLabels:
+            app: payments 
+    template:
+        metadata:
+            labels:
+                app: payments 
+        spec:
+            containers: 
+                - name: payments
+                  image: badlg/payments 
+                  env:
+                    - name: SERVER_PORT
+                      value: "3000"
+                    - name: NATS_URL
+                      value: 'http:nats-clusterip-srv:4222'
+                    - name: NATS_CLUSTER_ID
+                      value: ticketing
+                    - name: NATS_CLIENT_ID
+                      valueFrom: 
+                        fieldRef:
+                            fieldPath: metadata.name # currently running pods name. every pods has a unique name
+                    - name: PAYMENTS_MONGO_URI
+                      value: 'mongodb://payments-mongo-clusterip-srv:27017/payments'
+                    - name: JWT_SECRET_KEY
+                      valueFrom: 
+                        secretKeyRef:
+                            name: jwt-secret 
+                            key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: payments-clusterip-srv
+spec:
+    selector:
+        app: payments
+    type: ClusterIP
+    ports:
+        - name: payments 
+          protocol: TCP
+          port: 3000
+          targetPort: 3000

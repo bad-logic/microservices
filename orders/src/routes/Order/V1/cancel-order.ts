@@ -14,8 +14,11 @@ router.put('/:orderId',allowAuthOnly,async (req:Request,res:Response,next:NextFu
         const orderId = req.params.orderId;
         const isValid = ObjectID.isValid(orderId);
         if(!isValid) throw new NotFoundError('order with that id not found');
-        const ord = await OrderRepo.cancelOrder(orderId,req.currentUser!.id);
-        if(!ord) throw new AuthenticationError('You cannot cancel this order');
+        const existOrder = await OrderRepo.getOrderById(orderId);
+        if(!existOrder || existOrder.userId !== req.currentUser!.id){
+            throw new AuthenticationError('You cannot cancel this order');
+        }
+        const ord = await OrderRepo.cancelOrder(orderId);
         // emit order cancelled event to nats server
         new OrderCancelledPublisher(natsWrapper.client).publish({
             id:ord.id,

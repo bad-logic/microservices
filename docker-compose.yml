@@ -1,0 +1,171 @@
+version: '3'
+
+services:
+
+  reverse-proxy:
+    image: nginx:1.17.10
+    container_name: reverse_proxy
+    depends_on:
+        - client-srv
+    volumes:
+      - ./reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    restart: on-failure
+    
+  nats-streaming-srv:
+    image: nats-streaming:0.17.0
+    container_name: nats-srv-container
+    command: [
+            '-p',
+            '4222',
+            '-m',
+            '8222',
+            '-hbi',
+            '5s',
+            '-hbt',
+            '5s',
+            '-hbf',
+            '2',
+            '-SD',
+            '-cid',
+            'ticketing'               
+        ]
+    restart: on-failure
+
+  client-srv:
+    image: badlog/client
+    container_name: client-srv-container
+    build: 
+      context: ./client
+    volumes:
+      - ./client:/usr/app # mounting the volume so that file changes are detected
+    restart: on-failure # in case of failure restart
+
+  auth-clusterip-srv:
+    image: badlog/auth
+    container_name: auth-srv-container
+    build: 
+      context: ./auth
+    volumes:
+      - ./auth:/usr/app 
+    environment:
+      - SERVER_PORT=3000
+      - AUTH_MONGO_URI=mongodb://auth-mongo:27017/auth
+      - JWT_SECRET_KEY=DSFGSADFSDHFDGADSF
+    links:
+      - auth-mongo
+    depends_on:
+      - auth-mongo
+    restart: on-failure 
+
+  auth-mongo:
+    image: mongo
+    container_name: authdb-container
+    restart: on-failure 
+
+  orders-clusterip-srv:
+    image: badlog/orders
+    container_name: orders-srv-container
+    build: 
+      context: ./orders
+    volumes:
+      - ./orders:/usr/app 
+    environment:
+      - SERVER_PORT=3000
+      - ORDERS_MONGO_URI=mongodb://order-mongo:27017/orders
+      - NATS_URL=http:nats-streaming-srv:4222
+      - NATS_CLUSTER_ID=ticketing
+      - NATS_CLIENT_ID=orderstanclientid
+      - JWT_SECRET_KEY=DSFGSADFSDHFDGADSF
+    links:
+      - order-mongo
+      - nats-streaming-srv
+    depends_on:
+      - order-mongo
+      - nats-streaming-srv
+    restart: on-failure
+
+  order-mongo:
+    image: mongo
+    container_name: orderdb-container
+    restart: on-failure 
+
+  tickets-clusterip-srv:
+    image: badlog/tickets
+    container_name: tickets-srv-container
+    build: 
+      context: ./tickets
+    volumes:
+      - ./tickets:/usr/app 
+    environment:
+      - SERVER_PORT=3000
+      - TICKETS_MONGO_URI=mongodb://ticket-mongo:27017/tickets
+      - NATS_URL=http:nats-streaming-srv:4222
+      - NATS_CLUSTER_ID=ticketing
+      - NATS_CLIENT_ID=ticketstanclientid
+      - JWT_SECRET_KEY=DSFGSADFSDHFDGADSF
+    links:
+      - ticket-mongo
+      - nats-streaming-srv
+    depends_on:
+      - ticket-mongo
+      - nats-streaming-srv
+    restart: on-failure 
+
+  ticket-mongo:
+    image: mongo
+    container_name: ticketdb-container
+    restart: on-failure 
+
+  expiration-srv:
+    image: badlog/expiration
+    container_name: expiration-srv-container
+    build: 
+      context: ./expiration
+    volumes:
+      - ./expiration:/usr/app
+    environment:
+      - NATS_URL=http:nats-streaming-srv:4222
+      - NATS_CLUSTER_ID=ticketing
+      - NATS_CLIENT_ID=expirationstanclientid
+      - EXPIRATION_REDIS_URI=exp-redis
+    links:
+      - exp-redis
+      - nats-streaming-srv
+    depends_on:
+      - exp-redis
+      - nats-streaming-srv
+    restart: on-failure
+
+  exp-redis:
+    image: redis
+    container_name: expdb-container
+    restart: on-failure
+
+  payments-clusterip-srv:
+    image: badlog/payments
+    container_name: payments-srv-container
+    build: 
+      context: ./payments
+    volumes:
+      - ./payments:/usr/app 
+    environment:
+      - SERVER_PORT=3000
+      - PAYMENTS_MONGO_URI=mongodb://payments-mongo:27017/payments
+      - NATS_URL=http:nats-streaming-srv:4222
+      - NATS_CLUSTER_ID=ticketing
+      - NATS_CLIENT_ID=paymentstanclientid
+      - JWT_SECRET_KEY=DSFGSADFSDHFDGADSF
+    links:
+      - payments-mongo
+      - nats-streaming-srv
+    depends_on:
+      - payments-mongo
+      - nats-streaming-srv
+    restart: on-failure 
+
+  payments-mongo:
+    image: mongo
+    container_name: paymentsdb-container
+    restart: on-failure 

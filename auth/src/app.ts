@@ -19,6 +19,10 @@ app.use(cookieSession({
     // secure: true, // used for https only
     // secure : process.env.NODE_ENV !== "test" // jest sets the NODE_ENV to test
 }));
+app.use((req,res,next)=>{
+    console.log(req.url);
+    next();
+});
 
 app.use('/api',RouterHandlers);
 

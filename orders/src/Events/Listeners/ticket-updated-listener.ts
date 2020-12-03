@@ -10,6 +10,9 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent>{
     async onMessage(data:TicketUpdatedEvent['data'],msg:Message){
         const {id,price,title,version} = data;
         const formerTicket = await TicketRepo.getTicketById(id);
+        // there may be cases in which update event of a ticket is fired by event bus
+        // before the ticket created event if actions are executed within short duration
+        // we also need to handle this instead of throwing errors
         if(!formerTicket) throw new Error('ticket not found'); // donot throw error
         
         // if the version-1 is greater than current ticket version then this is the event
@@ -22,7 +25,9 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent>{
         // if version-1 is equal to the current ticket version then the event is valid
         // and should update the ticket
         if(version-1 === formerTicket.version){
-            await TicketRepo.updateTicket(id,{price,title,orderId:data.orderId});
+            let unset = false;
+            if(!data.orderId) unset = true; // indicates this is event fired after ticket has been cancelled to unreserve the ticket
+            const tic = await TicketRepo.updateTicket(id,{price,title,orderId:data.orderId},unset);
         }
         // else if version-1 is less than the current ticket version then acknowledge it
         // because it is probably already processed event and has not been acknowledged due 

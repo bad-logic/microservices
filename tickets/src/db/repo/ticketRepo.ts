@@ -36,7 +36,7 @@ export class TicketRepo{
             if(!isValid) return null;
             return await ticketCollection.findOne({_id:new ObjectID(id)});
         }catch(err){
-            if(err)
+            console.log('err',err);
             throw err;
         }
     }
@@ -67,9 +67,9 @@ export class TicketRepo{
             throw err;
         }
     }
-    static async unreserveTicketById(id:string,removeInfo:object):Promise<any>{
+    static async unreserveTicketById(id:string):Promise<any>{
         try{
-            const res = await ticketCollection.updateOne({_id:new ObjectID(id)},{$unset:removeInfo,$inc:{'version':1}});
+            const res = await ticketCollection.updateOne({_id:new ObjectID(id)},{$unset:{"orderId":""},$inc:{'version':1}});
             if(res.result.nModified) return await ticketCollection.findOne({_id:new ObjectID(id)});
             return null;
         }catch(err){

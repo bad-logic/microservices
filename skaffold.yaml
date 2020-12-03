@@ -48,7 +48,14 @@ build:
             manual:
                 - src: '**/*.ts'
                   dest: .
-
+        - image: badlog/payments
+          context: payments
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+                - src: 'src/**/*.ts'
+                  dest: .
 
 # k create secret generic jwt-secret --from-literal=JWT_KEY=#$@#DFGDGddsj&657$#
 # HSTS BY PASS type thisisunsafe
