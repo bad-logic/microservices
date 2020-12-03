@@ -1,7 +1,6 @@
 node_modules/
 tsconfig.json
-docker-compose.yml
 sharedlib/
 nats-test/
 concurrency-test/
-expiration/
+

@@ -6,6 +6,7 @@ import {TicketRepo} from "./db/repo/ticketRepo";
 import {natsWrapper} from './nats-wrapper';
 import {TicketCreatedListener} from './Events/Listeners/ticket-created-listener';
 import {TicketUpdatedListener} from './Events/Listeners/ticket-updated-listener';
+import {ExpirationCompleteListener} from './Events/Listeners/expiration-complete-listener';
 
 function checkConfigs(){
     if(!process.env.NATS_URL){
@@ -47,6 +48,7 @@ async function start(){
         // that will eventually be emitted by the nats streaming server
         new TicketCreatedListener(natsWrapper.client).listen();
         new TicketUpdatedListener(natsWrapper.client).listen();
+        new ExpirationCompleteListener(natsWrapper.client).listen();
         const client = await MongoClient.connect(process.env.ORDERS_MONGO_URI!,{
           useNewUrlParser: true,
           useUnifiedTopology: true,

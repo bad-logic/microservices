@@ -1,0 +1,32 @@
+{
+  "name": "expiration",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "server:dev": "ts-node-dev --poll src/app.ts",
+    "test": "cross-env JWT_SECRET_KEY='@$#FDFG52df3gfg4g3244rgtds' jest --verbose --watchAll --no-cache"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "./src/test/setup.ts"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@rbtickets/sharedlib": "^1.0.21",
+    "@types/bull": "^3.14.4",
+    "bull": "^3.18.1",
+    "ts-node-dev": "^1.0.0-pre.60",
+    "typescript": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.13",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.3.0"
+  }
+}

@@ -7,6 +7,7 @@ export default function useRequest({url,method,body,onSuccess}){
     const [errors,setErrors] = useState(null);
 
     const visualizeError = (errs)=>{
+        console.log('errs',errs);
             setErrors(<div className="alert alert-danger" role="alert">
             <ul className="my-0">
             {

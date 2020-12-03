@@ -20,7 +20,7 @@ const OrderValidationSchema = Joi.object().keys({
     },'validating if the id is of type objectID').required()
 });
 
-// POST /api/ticket/v1/new-order
+// POST /api/order/v1/new-order
 router.post('/',allowAuthOnly,validate(OrderValidationSchema),async (req:Request,res:Response,next:NextFunction)=>{
     try{
         const {ticketId} = req.validData;
@@ -48,7 +48,7 @@ router.post('/',allowAuthOnly,validate(OrderValidationSchema),async (req:Request
             userId: formattedResult.userId,
             version:formattedResult.version,
             ticket:{
-                id:formattedResult.ticket._id,
+                id:formattedResult.ticket.id,
                 price:formattedResult.ticket.price
             }
         });

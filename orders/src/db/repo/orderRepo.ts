@@ -25,7 +25,7 @@ export class OrderRepo{
 
     static async createOrder(status:string,expiresAt:Date,ticket:string,userId:string):Promise<any>{
         try{
-            const newOrder = {status,expiresAt,ticket,userId,version:0};
+            const newOrder = {status,expiresAt,ticket:new ObjectID(ticket),userId,version:0};
             const res = await orderCollection.insertOne(newOrder);
             return res.ops[0];
         }catch(err){
@@ -142,10 +142,10 @@ export class OrderRepo{
         }
     }
 
-    static async cancelOrder(id:string,userId:string):Promise<any>{
+    static async cancelOrder(id:string):Promise<any>{
         try{
             // also check the version is valid or not before updating
-            const res = await orderCollection.updateOne({_id:new ObjectID(id),userId:userId},
+            const res = await orderCollection.updateOne({_id:new ObjectID(id)},
             {$set:{status:OrderStatus.Cancelled},$inc:{'version':1}});
             if(res.result.nModified) return await this.getOrderById(id);
             return null;
