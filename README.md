@@ -24,6 +24,6 @@ USING KUBERNETES:\
 
 USING DOCKER COMPOSE:\
 => docker-compose.yml and reverse_proxy directory is specifically for docker compose only\
-=> RUN docker-compose build && docker-compose up\ 
+=> RUN docker-compose -f <docker-compose-file-name> up\ 
 => above command will create docker images and eventually run those in container.\
 => got to your localhost:80 in your browser.\
