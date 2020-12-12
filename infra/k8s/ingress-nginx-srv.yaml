@@ -22,7 +22,7 @@ spec:
                   backend:
                     serviceName: orders-clusterip-srv
                     servicePort: 3000
-                - path: /api/payment/?(.*)    
+                - path: /api/payments/?(.*)    
                   backend:
                     serviceName: payments-clusterip-srv
                     servicePort: 3000

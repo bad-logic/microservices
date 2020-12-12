@@ -154,6 +154,18 @@ export class OrderRepo{
         }
     }
 
+    static async completeOrder(id:string):Promise<any>{
+        try{
+            // also check the version is valid or not before updating
+            const res = await orderCollection.updateOne({_id:new ObjectID(id)},
+            {$set:{status:OrderStatus.Complete},$inc:{'version':1}});
+            if(res.result.nModified) return await this.getOrderById(id);
+            return null;
+        }catch(err){
+            throw err;
+        }
+    }
+
     static mapDocToObj({_id:id, ...rest}):any{
         return {id,...rest};
     }

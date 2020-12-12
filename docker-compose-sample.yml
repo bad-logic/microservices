@@ -157,7 +157,7 @@ services:
       - NATS_CLUSTER_ID=ticketing
       - NATS_CLIENT_ID=paymentstanclientid
       - JWT_SECRET_KEY=DSFGSADFSDHFDGADSF
-      - STRIPE_SECRET_KEY=sk_test_HtoakGNmLvVQxcKgh1w83UE3005cLK6fMe
+      - STRIPE_SECRET_KEY=yourstripesecretkey
     links:
       - payments-mongo
       - nats-streaming-srv

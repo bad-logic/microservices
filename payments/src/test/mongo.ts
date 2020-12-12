@@ -1,7 +1,7 @@
 import {MongoMemoryServer} from 'mongodb-memory-server';
 import {MongoClient} from 'mongodb';
 import {OrderRepo} from '../db/repo/orderRepo';
-
+import {PaymentRepo} from '../db/repo/paymentRepo';
 
 let db:any;
 let mongo:any;
@@ -16,6 +16,7 @@ export const connect = async()=>{
     });
     db = connection.db('tickets');
     await OrderRepo.init(db);
+    await PaymentRepo.init(db);
 }
 
 export const clearCollections = async ()=>{
