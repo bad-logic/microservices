@@ -18,7 +18,8 @@ USING KUBERNETES:\
 => start k8s cluster\
 => RUN below command to generate secrets in the cluster\
 => kubectl create secret generic jwt-secret --from-literal=JWT_KEY=someRANDOMjwtKEY\
-=> RUN skaffold dev which will create docker images and eventually run the                    kubernetes deployments files that is inside the infra directory.\
+=> kubectl create secret generic stripe-secret --from-literal STRIPE_KEY=yourstripesecretkey\
+=> RUN skaffold dev which will create docker images and eventually run the kubernetes deployments files that is inside the infra directory.\
 => go to your k8s cluster ip in the browser
 
 USING DOCKER COMPOSE:\

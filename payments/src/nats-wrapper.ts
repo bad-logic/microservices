@@ -1,5 +1,4 @@
 import nats,{Stan} from 'node-nats-streaming';
-import {randomBytes} from 'crypto';
 
 class NatsWrapper{
     private _client?:Stan;
@@ -14,6 +13,7 @@ class NatsWrapper{
 
         return new Promise((resolve,reject)=>{
             this.client.on('connect',_=>{
+                // @ts-ignore
                 return resolve();
             });
             this.client.on('err',(err)=>{
@@ -22,7 +22,6 @@ class NatsWrapper{
         });
 
     }
-
 
 }
 

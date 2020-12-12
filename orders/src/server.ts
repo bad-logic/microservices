@@ -7,6 +7,7 @@ import {natsWrapper} from './nats-wrapper';
 import {TicketCreatedListener} from './Events/Listeners/ticket-created-listener';
 import {TicketUpdatedListener} from './Events/Listeners/ticket-updated-listener';
 import {ExpirationCompleteListener} from './Events/Listeners/expiration-complete-listener';
+import {PaymentCreatedListener} from './Events/Listeners/payment-created-listener';
 
 function checkConfigs(){
     if(!process.env.NATS_URL){
@@ -49,6 +50,9 @@ async function start(){
         new TicketCreatedListener(natsWrapper.client).listen();
         new TicketUpdatedListener(natsWrapper.client).listen();
         new ExpirationCompleteListener(natsWrapper.client).listen();
+        new PaymentCreatedListener(natsWrapper.client).listen();
+
+        // DATABASE CONNECTION
         const client = await MongoClient.connect(process.env.ORDERS_MONGO_URI!,{
           useNewUrlParser: true,
           useUnifiedTopology: true,

@@ -16,7 +16,7 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
             if(orderExists.status===OrderStatus.Created){
                 const ord = await OrderRepo.cancelOrder(data.orderId);
                 // emit order cancelled event to nats server
-                new OrderCancelledPublisher(natsWrapper.client).publish({
+                await new OrderCancelledPublisher(natsWrapper.client).publish({
                     id:ord.id,
                     version:ord.version,
                     ticket:{

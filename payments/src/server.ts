@@ -3,6 +3,7 @@ import {requestHandler} from './app';
 import { MongoClient } from "mongodb";
 import {natsWrapper} from './nats-wrapper';
 import {OrderRepo} from './db/repo/orderRepo';
+import {PaymentRepo} from './db/repo/paymentRepo';
 import {OrderCreatedListener} from './Events/listener/order-created-listener';
 import {OrderCancelledListener} from './Events/listener/order-cancelled-listener';
 
@@ -18,6 +19,9 @@ function checkConfigs(){
     }
     if(!process.env.JWT_SECRET_KEY){
         throw new Error('ENV_VAR JWT_SECRET_KEY not found');
+    }
+    if(!process.env.STRIPE_SECRET_KEY){
+        throw new Error('ENV_VAR STRIPE_SECRET_KEY not found');
     }
     if(!process.env.PAYMENTS_MONGO_URI){
         throw new Error('ENV_VAR TICKETS_MONGO_URI not found');
@@ -46,7 +50,7 @@ async function start(){
         // that will be eventually fired or emitted by the nats streaming server
         new OrderCancelledListener(natsWrapper.client).listen();
         new OrderCreatedListener(natsWrapper.client).listen();
-        const client = await MongoClient.connect(process.env.TICKETS_MONGO_URI!,{
+        const client = await MongoClient.connect(process.env.PAYMENTS_MONGO_URI!,{
           useNewUrlParser: true,
           useUnifiedTopology: true,
           poolSize: 10,
@@ -55,6 +59,7 @@ async function start(){
         console.log('Database connection established');
         const db = client.db('tickets');
         await OrderRepo.init(db);
+        await PaymentRepo.init(db);
         const server = http.createServer(requestHandler);
         server.listen(process.env.SERVER_PORT,()=>{
             console.log(`server listening at port ${process.env.SERVER_PORT}!!!!`);

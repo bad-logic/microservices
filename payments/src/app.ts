@@ -1,6 +1,6 @@
 import express from 'express';
 import {json} from 'body-parser';
-// import {RouteHandlers} from './routes';
+import {RouteHandlers} from './routes';
 import {handleError,handleResourceNotFound,setCurrentUser} from '@rbtickets/sharedlib';
 import cookieSession from 'cookie-session';
 
@@ -20,7 +20,7 @@ app.use(cookieSession({
 
 app.use(setCurrentUser(process.env.JWT_SECRET_KEY!)); // set current user if cookie provided
 
-// app.use('/api',RouteHandlers);
+app.use('/api',RouteHandlers);
 
 // 404 Errors
 app.use(handleResourceNotFound());

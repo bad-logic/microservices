@@ -2,8 +2,9 @@ import {requestHandler} from '../app';
 import request  from 'supertest';
 import jwt from 'jsonwebtoken';
 import {connect,clearCollections,disconnect} from './mongo';
+import { ObjectID } from 'mongodb';
 jest.mock('../nats-wrapper.ts');
-
+jest.mock('../stripe.ts');
 
 declare global{
     namespace NodeJS{
@@ -17,7 +18,7 @@ declare global{
 global.mockCookie = (id?:string)=>{
     // Build a JWT Payload. {id,email,username}
     const payload = {
-        id: id||'5f59ecbf71d30bf128fb2606',
+        id: id||new ObjectID().toHexString(),
         username : 'test123',
         email : 'test@test.com'
     }

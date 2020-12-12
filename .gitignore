@@ -3,4 +3,5 @@ tsconfig.json
 sharedlib/
 nats-test/
 concurrency-test/
+docker-compose.yml
 
