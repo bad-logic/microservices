@@ -1,6 +1,6 @@
 MICROSERVICES ORCHESTRATION USING KUBERNETES:\
 
-![alt text](https://github.com/bad-logic/microservices/infra.png)
+![alt text](https://github.com/bad-logic/microservices/blob/master/infra.png)
 
 SERVICES\
 client => React server side rendering using next js\
