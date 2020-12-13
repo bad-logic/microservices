@@ -43,7 +43,8 @@ export class TicketRepo{
 
     static async getTickets():Promise<any>{
         try{
-            return await ticketCollection.find({}).toArray();
+            // return only purchasable tickets
+            return await ticketCollection.find({orderId:null}).toArray();
         }catch(err){
             throw err;
         }

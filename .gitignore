@@ -4,4 +4,4 @@ sharedlib/
 nats-test/
 concurrency-test/
 docker-compose.yml
-
+.env.local

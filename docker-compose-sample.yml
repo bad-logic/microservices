@@ -42,7 +42,7 @@ services:
       - ./client:/usr/app # mounting the volume so that file changes are detected
     restart: on-failure # in case of failure restart
 
-  auth-clusterip-srv:
+  auth-srv:
     image: badlog/auth
     container_name: auth-srv-container
     build: 
@@ -64,7 +64,7 @@ services:
     container_name: authdb-container
     restart: on-failure 
 
-  orders-clusterip-srv:
+  orders-srv:
     image: badlog/orders
     container_name: orders-srv-container
     build: 
@@ -91,7 +91,7 @@ services:
     container_name: orderdb-container
     restart: on-failure 
 
-  tickets-clusterip-srv:
+  tickets-srv:
     image: badlog/tickets
     container_name: tickets-srv-container
     build: 
@@ -143,7 +143,7 @@ services:
     container_name: expdb-container
     restart: on-failure
 
-  payments-clusterip-srv:
+  payments-srv:
     image: badlog/payments
     container_name: payments-srv-container
     build: 

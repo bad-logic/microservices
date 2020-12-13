@@ -19,10 +19,11 @@ export default function useRequest({url,method,body,onSuccess}){
             </ul>
         </div>);
     };
-    const doRequest = async()=>{
+    const doRequest = async(payload={})=>{
         try{
-            const resp = await axios[method](url,body);
             setErrors(null);
+            console.log('data',{...body,...payload});
+            const resp = await axios[method](url,{...body,...payload});
             if(onSuccess) onSuccess(resp.data); 
             return resp.data;
         }catch(err){

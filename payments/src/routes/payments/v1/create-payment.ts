@@ -33,16 +33,20 @@ router.post('/',allowAuthOnly,validate(newPaymentValidationSchema),async (req:Re
         if(order.status === OrderStatus.Cancelled){
             throw new BadRequestError('order has expired');
         }
+        // we have not fired order updated event so order.status is never complete
+        // eventhough order has already been paid so there is flaw yo can pay
+        // multiple times for same product
+        // TODO after payment is created fire order update event with status set to complete
+        // and catch that event and update the order collection
         if(order.status === OrderStatus.Complete){
             throw new BadRequestError('Payment already completed');
         }
         const charge = await stripe.charges.create({
             currency:'usd',
-            amount:order.price*100, // converting to cents for usd
+            amount:Math.round(order.price*100), // converting to cents for usd
             source: token,
             description:`purchasing ticket ${order.ticket}`
         });
-        console.log('charge creation response',charge);
         const payment = await PaymentRepo.createPayment(orderId,charge.id); 
         const val = PaymentRepo.mapDocToObj(payment);
         // emit order completed event
