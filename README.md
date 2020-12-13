@@ -4,7 +4,9 @@ SERVICES\
 client => React server side rendering using next js\
 auth service => REST API based authentication service\
 orders service => REST API based order service that store the client orders\
-ticket service => REST API based ticket service that creates tickets that are              eventually booked by the clients.
+ticket service => REST API based ticket service that creates tickets that are              eventually booked by the clients.\
+payments service => REST API based payment service that charges customer through stripe\
+expiration service => A Worker service leveraging the redis server and bulljs to keep track of when the orders expire
 
 EVENT-BUS\
 nats streaming server => used to emit different events (e.g: ticketcreated, ticketupdated, ordercreated, ordercancelled etc)
