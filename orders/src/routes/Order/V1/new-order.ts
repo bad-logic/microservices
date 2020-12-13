@@ -8,7 +8,7 @@ import {OrderCreatedPublisher} from '../../../Events/Publishers/order-created-pu
 import Joi from 'joi';
 import { ObjectID } from 'mongodb';
 
-const ORDER_EXPIRE_WINDOW_SECONDS = 1*60; // 1 minutes
+const ORDER_EXPIRE_WINDOW_SECONDS = 5*60; // 5 minutes
 
 const router = express.Router();
 

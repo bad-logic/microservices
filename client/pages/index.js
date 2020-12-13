@@ -1,6 +1,62 @@
-// import axios from 'axios';
+import Link from 'next/link';
 
-import buildClient from '../api/build-client';
+const index = ({currentUser,tickets})=>{
+    
+    const tableContent = tickets.map(t=>{
+            return (
+                <tr key={t.id}>
+                    <td>{t.title}</td>
+                    <td>{t.price}</td>
+                    <td>
+                    <Link href="/tickets/[ticketId]" as={`/tickets/${t.id}`}>
+                            <a className="nav-link">View</a>
+                    </Link>
+                    </td>
+                </tr>
+            );
+        });
+
+
+
+    return (
+            <div>
+                <h1>Tickets</h1>
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Price</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {tableContent}
+                    </tbody>
+                </table>
+            </div>
+        );
+}; 
+
+
+
+
+index.getInitialProps = async (context,client,currentUser)=>{
+    const data = await client.get('/api/ticket/v1/get-tickets');
+    return {tickets:data.data.tickets};
+}
+
+
+
+export default index;
+
+
+
+
+
+
+
+
+
 
 // IF YOU ARE RUNNING YOUR NEXTJS SERVER IN A DIFFERENT DOMAIN OR DIF KUBERNETES CLUSTER
 // AND SERVICES IN ANOTHER DOMAIN OR K-CLUSTER THEN WE WILL HAVE DIFFERENT DOMAIN FOR 
@@ -13,6 +69,7 @@ import buildClient from '../api/build-client';
 // ANY REQUEST FROM INSIDE THE REACT COMPONENT WILL BE ISSUED BY THE CLIENT BROWSER
 // ANY REQUEST INSIDE GETINITIALPROPS MAY BE EXECUTED FROM BOTH SERVER OR THE CLIENT BROWSER
 // GETINITIALPROPS
+
 // CASE: INITIATED BY NEXTJS SERVER
 // 1. ON HARD REFRESH 
 // 2. CLICKING THE LINK FROM DIFFERENT DOMAIN
@@ -21,13 +78,7 @@ import buildClient from '../api/build-client';
 // CASE: INITIATED BY CLIENT BROWSER
 // NAVIGATING OR ROUTING FROM ONE PAGE TO ANOTHER WHILE INSIDE THE APP
 
-const index = ({currentUser})=>{
-    return <h1>Index</h1>
-}; 
 
-// specific to next js
-// code inside getInitialProps function will be executed inside nextjs server which is in kubernets cluster
-// or may be from the client browser depends on the situation noted in above note
 
 // if this network request is made from next js server running inside the kubernetes cluster
 // and next js server is also running in the same cluster then we need to connect to the
@@ -80,7 +131,6 @@ const index = ({currentUser})=>{
 //         //     }
 //         // );
 //         res = await axios.get(
-//             // cross namespace communication not working so directly using clusterIp service
 //             `http://ingress-nginx-controller-admission.kube-system.svc.cluster.local/api/auth/v1/current-user`,
 //             {
 //                 headers: req.headers //  headers includes hosts cookies and all 
@@ -93,16 +143,9 @@ const index = ({currentUser})=>{
 //         // if there is no host address then the axios will  add the current host address 
 //         // in this case it is localhost=> which is the container that is running 
 //         // nextjs server inside kubernetes cluster. so it will reach out to
-//         // localhost:80/api/auth/v1/current-user. port 80 since we didn.t specify port 
+//         // localhost:80/api/auth/v1/current-user. port 80 since we didn't specify port 
 //         // it will use 80 by default and inside that container we don't have any
 //         // service listening at port 80
 //     }     
 //     return res.data;
 //  }
-
-index.getInitialProps = async (context)=>{
-    const client = buildClient(context.req,'auth');
-    const res = await client.get('/api/auth/v1/current-user');
-    return res.data;
-}
-export default index;

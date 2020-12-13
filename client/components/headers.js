@@ -6,6 +6,8 @@ export default ({currentUser})=>{
     const links = [
         !currentUser && {label:'Sign-In', href:'/auth/sign-in'},
         !currentUser && {label:'Sign-Up', href:'/auth/sign-up'},
+        currentUser && {label:'My Orders', href:'/orders'},
+        currentUser && {label:'Sell Tickets', href:'/tickets/new'},
         currentUser && {label:'Sign-Out', href:'/auth/sign-out'}
     ].map(it=>{
             return  it && <li key={it.label} className="nav-item"> 
@@ -16,7 +18,7 @@ export default ({currentUser})=>{
         });
     return (
         <nav className="navbar navbar-light bg-light">
-            <Link href="">
+            <Link href="/">
                 <a className="navbar-brand">TICKET</a>
             </Link>
             <div className="d-flex justify-content-end">

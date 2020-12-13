@@ -13,7 +13,9 @@ const AppComponent = (props) =>{
     return <div>
         <Headers currentUser={currentUser}/>
         {/* Component is the page/component that is going to be rendered */}
-        <Component {...pageProps}/> 
+        <div className="container">
+            <Component currentUser={currentUser} {...pageProps}/> 
+        </div>
     </div>
 };
 
@@ -26,16 +28,20 @@ const AppComponent = (props) =>{
 // SINCE THIS APPCOMPONENT IS EXECUTED FOR ALL PAGES
 AppComponent.getInitialProps = async (context)=>{
 
-    const client = buildClient(context.ctx.req,'auth');
+    const client = buildClient(context.ctx.req);
     const res = await client.get('/api/auth/v1/current-user');
     let pageProps={};
     // MANUALLY INVOKING THE GETINITIALPROPS OF THE PAGE COMPONENT
     // ALSO WE NEED TO CHECK IF THE GETINITIALPROPS FUNCTION EXISTS IN THAT PAGE
     if(context.Component.getInitialProps){
-        pageProps = await context.Component.getInitialProps(context.ctx);
+        pageProps = await context.Component.getInitialProps(
+            context.ctx,
+            client,
+            res.data.user
+        );
     }
     // IF NO GETINITIALPROPS DEFINED IN PAGES THEN EMPTY OBJECT WILL BE SENT ref: pageProps={}
-    return {currentUser:res.data.currentUser,pageProps};
+    return {currentUser:res.data.user,pageProps};
 }
 
 // ARGUMENTS PROVIDE FOR PAGE COMPONENT AND CUSTOM APP COMPONENT in getInitialProps function
