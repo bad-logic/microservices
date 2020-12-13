@@ -1,7 +1,5 @@
 MICROSERVICES ORCHESTRATION USING KUBERNETES:\
 
-![alt text](https://github.com/bad-logic/microservices/blob/master/infra.png)
-
 SERVICES\
 client => React server side rendering using next js\
 auth service => REST API based authentication service\
@@ -35,3 +33,6 @@ USING DOCKER COMPOSE:\
 NOTE:\
 => for payment service provide STRIPE_SECRET_KEY env variable\
 => also add NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY env variable to NEXTJS .env.local file\
+
+![alt text](https://github.com/bad-logic/microservices/blob/master/infra.png)
+
