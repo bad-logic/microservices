@@ -1,4 +1,4 @@
-MICROSERVICES ORCHESTRATION USING KUBERNETES:\
+MICROSERVICES ORCHESTRATION USING KUBERNETES:
 
 SERVICES\
 client => React server side rendering using next js\
@@ -28,11 +28,11 @@ USING DOCKER COMPOSE:\
 => docker-compose.yml and reverse_proxy directory is specifically for docker compose only\
 => RUN docker-compose -f <docker-compose-file-name> up\ 
 => above command will create docker images and eventually run those in container.\
-=> finally, go to your localhost:80 in your browser.\
+=> finally, go to your localhost:80 in your browser.
 
 NOTE:\
 => for payment service provide STRIPE_SECRET_KEY env variable\
-=> also add NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY env variable to NEXTJS .env.local file\
+=> also add NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY env variable to NEXTJS .env.local file
 
 ![alt text](https://github.com/bad-logic/microservices/blob/master/infra.png)
 
