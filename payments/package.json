@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "server:dev": "ts-node-dev --poll src/server.ts",
-    "test": "cross-env JWT_SECRET_KEY='@$#FDFG52df3gfg4g3244rgtds' jest --verbose --watchAll --no-cache"
+    "test": "cross-env JWT_SECRET_KEY='@$#FDFG52df3gfg4g3244rgtds' jest --verbose --watchAll --no-cache",
+    "test:ci": "cross-env JWT_SECRET_KEY='@$#FDFG52df3gfg4g3244rgtds' jest"
   },
   "jest": {
     "preset": "ts-jest",
