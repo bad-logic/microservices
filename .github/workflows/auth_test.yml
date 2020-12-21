@@ -2,7 +2,8 @@ name: auth_test
 
 on: # describe when this workflow should be triggered
   pull_request: # this automation/workflow runs each time pull_request is created, update or re-opened
-    - 'auth/**' # if file changes inside auth directory run this test or automation
+    paths:
+      - 'auth/**' # if file changes inside auth directory run this test or automation
 jobs:
   build:
     runs-on: ubuntu-latest
