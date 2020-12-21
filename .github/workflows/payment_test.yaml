@@ -2,7 +2,8 @@ name: payment_test
 
 on: 
   pull_request: 
-    - 'payments/**' 
+    paths: 
+      - 'payments/**' 
 
 jobs:
   build:
