@@ -1,4 +1,4 @@
-name: tests
+name: auth_test
 
 on: # describe when this workflow should be triggered
   pull_request # this automation/workflow runs each time pull_request is created, update or re-opened
