@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+    name: ingress-nginx-srv 
+    annotations:
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+    rules:
+        - host: 127.0.0.1
+          http: 
+            paths:
+                - path: /api/auth/?(.*)    
+                  backend:
+                    serviceName: auth-clusterip-srv 
+                    servicePort: 3000
+                - path: /api/ticket/?(.*)    
+                  backend:
+                    serviceName: tickets-clusterip-srv
+                    servicePort: 3000
+                - path: /api/order/?(.*)    
+                  backend:
+                    serviceName: orders-clusterip-srv
+                    servicePort: 3000
+                - path: /api/payments/?(.*)    
+                  backend:
+                    serviceName: payments-clusterip-srv
+                    servicePort: 3000
+                - path: /?(.*)    
+                  backend:
+                    serviceName: client-clusterip-srv
+                    servicePort: 3000
+          
