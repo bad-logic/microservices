@@ -59,7 +59,7 @@ async function start(){
           poolSize: 10,
           wtimeout: 2500
         });
-        console.log('Database connection established');
+        console.log('<<<Database connection established>>>');
         const db = client.db('orders');
         await OrderRepo.init(db);
         await TicketRepo.init(db);

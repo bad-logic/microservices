@@ -33,6 +33,7 @@ function checkConfigs(){
 
 async function start(){
     try{
+        // checking the process environment variables
         checkConfigs();
         await natsWrapper.connect(
             process.env.NATS_CLUSTER_ID!,
@@ -56,7 +57,7 @@ async function start(){
           poolSize: 10,
           wtimeout: 2500
         });
-        console.log('Database connection established');
+        console.log('<<<Database connection established>>>');
         const db = client.db('tickets');
         await OrderRepo.init(db);
         await PaymentRepo.init(db);

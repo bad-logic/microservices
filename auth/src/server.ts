@@ -25,7 +25,7 @@ async function start(){
         });
         const db = client.db('auth');
         await UserRepo.init(db);
-        console.log('Database connection established');
+        console.log('<<<Database connection established>>>');
         const server = http.createServer(requestHandler);
         server.listen(process.env.SERVER_PORT,()=>{
             console.log(`server listening at port ${process.env.SERVER_PORT}!!!!`);
