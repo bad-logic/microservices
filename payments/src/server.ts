@@ -33,6 +33,7 @@ function checkConfigs(){
 
 async function start(){
     try{
+        // checking the process environment variables
         checkConfigs();
         await natsWrapper.connect(
             process.env.NATS_CLUSTER_ID!,
